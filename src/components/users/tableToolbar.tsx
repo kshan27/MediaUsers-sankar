@@ -20,7 +20,6 @@ export default function EnhancedTableToolbar() {
         const locMap = new Map();
         rows.forEach((user: UserData, index: number) => {
             const location = user.location;
-            console.log(`Users by Location : ${location}, user: ${user.name}`);
             if(locMap.has(location)) {
                 const numUsers = locMap.get(location);
                 locMap.set(location, numUsers + 1);

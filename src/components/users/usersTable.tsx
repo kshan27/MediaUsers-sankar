@@ -33,8 +33,6 @@ export default function UsersTable() {
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(20);
     const rows = useSelector((state: RootState) => {
-        console.log("Rendering: Users State from Selectors")
-        console.log(state.user.users);
         return state.user.users;
       });
     const usersStatus = useSelector((state: RootState) => state.user.status);
@@ -82,8 +80,6 @@ export default function UsersTable() {
     const visibleRows = React.useMemo(
     () =>
         {
-            console.log('Visible Rows:');
-            console.log(rows);
             if(rows ) {
                 return stableSort(rows, getComparator(order, orderBy)).slice(
                     page * rowsPerPage,
@@ -114,21 +110,14 @@ export default function UsersTable() {
             );
         }
         setSelected(newSelected);
-        console.log("Selected Items: ");
-        console.log(newSelected);
     };
 
     const deleteBtnClick = () => {
-        console.log("Delete Btn Click");
-        console.log("Selected Records");
-        console.log(selected);
         if(selected && selected.length) {
             selected.forEach(async (rowId, i) => {
-                console.log(i + " Deleting record"+rowId);
-                await dispatch(deleteUser({id: rowId}));
+                dispatch(deleteUser({id: rowId}));
             })
             setSelected([]);
-            console.log("Now All rows deleted ... **** , Reloading Users...");
         }
     }
 
@@ -138,12 +127,7 @@ export default function UsersTable() {
     }
 
     const updateLocation = async (userId: string, location: string) => {
-        console.log("Edit Btn Click");
-        console.log(`Selected Records id: ${userId} , location: ${location}`);
-        console.log(selected);
-
-        console.log(" Update record"+userId);
-        await dispatch(updateUser({id: userId, location }));
+        dispatch(updateUser({id: userId, location }));
         cancelUpdate(userId);
     }
 

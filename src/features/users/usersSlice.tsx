@@ -61,8 +61,6 @@ export const fetchUsersAsync = createAsyncThunk(
       try {
         const res = await fetch(`${BASEURL}/${APIENDPOINT}`);
         const users = await res.json();
-        console.log(" => +> fetchUsers Async: ");
-        console.log(users.length);
         return users;
       } catch (error: any) {
         return thunkAPI.rejectWithValue(error.message);
@@ -77,16 +75,15 @@ const usersSlice = createSlice({
     reducers: {
         deleteUser(state, action) {
             const userId = action.payload.id;
-            console.log(`Delete User reducer : Payload : ${userId}`);
             deleteUserAsync(userId).then((user) => {
                 console.log("Delete functionality completed..");
             });
+            state.users = state.users.filter((user: UserData) => user.id !== userId) || [];
         },
         updateUser(state, action) {
             const {id, location} = action.payload;
             updateUserAsync(id, location).then((user) => {
                 console.log("Location updated successfully");
-                console.log(user);
             })
             const user = state.users.find((user: UserData) => user.id === id);
             if(user) {
@@ -97,17 +94,14 @@ const usersSlice = createSlice({
     extraReducers: (builder) => {
         builder
           .addCase(fetchUsersAsync.pending, (state) => {
-            console.log("State Status pending: "+state.status);
             state.status = "loading";
           })
           .addCase(fetchUsersAsync.fulfilled, (state, action) => {
             state.status = "idle";
-            console.log("State Status fulfilled: "+state.status);
             state.users = action.payload;
           })
           .addCase(fetchUsersAsync.rejected, (state, action) => {
             state.status = "idle";
-            console.log("State Status rejected: "+state.status);
             state.error = action.payload;
           });
     }
